@@ -203,6 +203,7 @@ class SensorData:
         self.humidity = None
         self.distance = None
         self.waterlevel = None
+        """soilhumidity Werte: sehr nass ca. <20000; mäßig nass/optimal ca. 28000 - 32000; sehr trocken >50000 """
         self.soilhumidity1 = None
         self.soilhumidity2 = None
         self.soilhumidity3 = None
