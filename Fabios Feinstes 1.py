@@ -99,8 +99,8 @@ class WebServer:
             </script>
             </body>
 
-            </html>
-         """
+            </html>"""
+         
         network.country("DE")
     
     def __connect_to_wlan(self) -> str:
@@ -298,5 +298,5 @@ class SensorController:
             self.pump3.off()
 
 
-webserver = WebServer(wlan_ssid="", wlan_pw="")
+webserver = WebServer(wlan_ssid="Whyfi", wlan_pw="YiStillTheMain69")
 webserver.start_server()

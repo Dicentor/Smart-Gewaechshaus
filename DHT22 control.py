@@ -1,7 +1,7 @@
 # Bibliotheken laden
 from machine import Pin
 from utime import sleep
-from adafruit_dht import DHT22
+from dht import DHT22
 
 # Initialisierung GPIO und DHT22
 sleep(1)

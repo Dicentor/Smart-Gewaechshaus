@@ -15,19 +15,17 @@ import socket
 import os
 import urequests as requests
 import json
-import time
 
-from sensor.reader import SensorReader, SensorController
+from sensor.reader import SensorReader
 
 class WebServer:
     def __init__(self, wlan_ssid: str, wlan_pw: str):
-        self.model_type = "Toms Pico"
         self.ssid = wlan_ssid
         self.pw = wlan_pw
         self.wlan = network.WLAN(network.STA_IF)
         self.ip = self.__connect_to_wlan()
         self.reader = SensorReader()
-        self.controller = SensorController(self.reader)
+        self.__read_pi_config()
         self.unique_id = self.__get_board_id()
         print(f"RaspberryPi Board-ID: {self.unique_id}")
         print(f"Modelltyp: {self.model_type}")
@@ -40,10 +38,11 @@ class WebServer:
             id += hex(b)[2:]
         return id
     
-    """def __read_pi_config(self) -> dict:
+    def __read_pi_config(self) -> dict:
+        """Reads identifier.json to get device specific ID and model_type."""
         with open("identifier.json") as f:
             data = json.load(f)
-        self.model_type = data["model_type"]"""
+        self.model_type = data["model_type"]
 
     def __connect_to_wlan(self) -> str:
         """
@@ -71,11 +70,7 @@ class WebServer:
             return ''
     
     def __post_data(self, data_dict):
-        try:
-            res = requests.post(f"https://greenhouse-web.vercel.app/api/data", headers={"apiKey": f"{self.unique_id}"}, json=data_dict)
-            res.close()
-        except:
-            return
+        requests.post(f"http://192.168.178.49:3000/api/data", headers={"apiKey": f"{self.unique_id}"}, json=data_dict)
         
     def start_measuring(self):
         while True:
@@ -89,11 +84,11 @@ class WebServer:
             print(f"Bodenfeuchtigkeit 2: {self.reader.data.soil_humidity_2}")
             print(f"Bodenfeuchtigkeit 3: {self.reader.data.soil_humidity_3}")
             print(data_dict)
-            self.controller.activate_needed_pumps()
             self.__post_data(data_dict)
+            print(req.content)
             print("="*24)
-            time.sleep(30)
+            time.sleep(5)
 
 
-webserver = WebServer(wlan_ssid="Whyfi", wlan_pw="YiStillTheMain69")
+webserver = WebServer(wlan_ssid="isa", wlan_pw="5.99!u.D*h?epale-TONI=(hund)5.55")
 webserver.start_measuring()
