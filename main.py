@@ -84,7 +84,7 @@ class WebServer:
             print(f"Temperatur: {self.reader.data.temperature}")
             print(f"Luftfeuchtigkeit: {self.reader.data.humidity}")
             print(f"Distanz: {self.reader.data.distance}")
-            print(f"Reservoir: {self.reader.data.water_level}")
+            print(f"Wasser leer: {self.reader.data.is_water_empty}")
             print(f"Bodenfeuchtigkeit 1: {self.reader.data.soil_humidity_1}")
             print(f"Bodenfeuchtigkeit 2: {self.reader.data.soil_humidity_2}")
             print(f"Bodenfeuchtigkeit 3: {self.reader.data.soil_humidity_3}")

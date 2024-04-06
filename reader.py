@@ -22,7 +22,7 @@ class SensorData:
         self.temperature: float = None
         self.humidity: float = None
         self.distance: float = None
-        self.water_level: float = None
+        self.is_water_empty: bool = None
         self.soil_humidity_1: float = None
         self.soil_humidity_2: float = None
         self.soil_humidity_3: float = None
@@ -30,12 +30,12 @@ class SensorData:
 class SensorReader:
     def __init__(self):
         self._led_onboard = Pin('LED', Pin.OUT, value=0)
-        self._dht22_sensor = DHT22(Pin(15, Pin.IN, Pin.PULL_UP))
+        self._dht22_sensor = DHT22(Pin(14, Pin.IN, Pin.PULL_UP))
         self._plant_dist = Pin(6, Pin.OUT)
         self._CMS1      = ADC(Pin(26, Pin.IN))
         self._CMS2      = ADC(Pin(27, Pin.IN))
         self._CMS3      = ADC(Pin(28, Pin.IN))
-        self._CMS4      = ADC(Pin(29, Pin.IN))
+        self._WLsens    = Pin(1, Pin.IN)
         self._trigger   = Pin(9, Pin.OUT)
         self._echo      = Pin(10, Pin.IN)
         self.data = SensorData()
@@ -50,9 +50,9 @@ class SensorReader:
         self._dht22_sensor.measure()
         self.data.humidity = self._dht22_sensor.humidity()
 
-    def _measure_water_level(self) -> None:
+    def _measure_is_water_empty(self) -> None:
         """Measures height of residual water in irrigation tank and stores it in data.water_level."""
-        self.data.water_level = self._CMS4.read_u16()
+        self.data.is_water_empty = bool(self._WLsens.value())
         
     def _measure_plant_dist(self) -> None:
         """Measures distance between top of plant and roof of tent and stores it in data.distance."""
@@ -75,7 +75,7 @@ class SensorReader:
         """ 
         default_sensors = ["temperature",
                            "humidity",
-                           "water_level",
+                           "is_water_empty",
                            "distance",
                            "soil_humidity_1",
                            "soil_humidity_2",
@@ -94,9 +94,9 @@ class SensorReader:
             elif sensor.lower() == "humidity":
                 self._measure_humidity()
                 ret_dict["humidity"] = self.data.humidity
-            elif sensor.lower() == "water_level":
-                self._measure_water_level()
-                ret_dict["water_level"] = self.data.water_level
+            elif sensor.lower() == "is_water_empty":
+                self._measure_is_water_empty()
+                ret_dict["is_water_empty"] = self.data.is_water_empty
             elif sensor.lower() == "distance":
                 self._measure_plant_dist()
                 ret_dict["distance"] = self.data.distance
@@ -113,9 +113,9 @@ class SensorReader:
 class SensorController():
     def __init__(self,reader):
         self._sensor_reader = reader
-        self._pump1 = Pin(1, Pin.OUT)
-        self._pump2 = Pin(2, Pin.OUT)
-        self._pump3 = Pin(3, Pin.OUT)
+        self._pump1 = Pin(21, Pin.OUT, value=0)
+        self._pump2 = Pin(20, Pin.OUT, value=0)
+        self._pump3 = Pin(19, Pin.OUT, value=0)
         self._lamp = Pin(4, Pin.OUT)
         self._fan = Pin(5, Pin.OUT)
         self._emg_stop_pump1 = False
