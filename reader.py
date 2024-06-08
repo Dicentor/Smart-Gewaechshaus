@@ -51,7 +51,7 @@ class SensorReader:
         self.data.humidity = self._dht22_sensor.humidity()
 
     def _measure_is_water_empty(self) -> None:
-        """Measures height of residual water in irrigation tank and stores it in data.water_level."""
+        """Measures height of residual water in irrigation tank and stores it in data.is_water_empty."""
         self.data.is_water_empty = bool(self._WLsens.value())
         
     def _measure_plant_dist(self) -> None:
