@@ -2,7 +2,7 @@ import network
 import socket
 import ure
 import utime
-import ssl
+import ussl
 import json
 
 def create_access_point(password: str, essid: str = "Smart-GH") -> tuple[str, str]:
@@ -478,7 +478,7 @@ def handle_request(request: str, wlan) -> str:
     If the request is a GET request to the '/connect' endpoint with invalid
     network credentials or incorrect format, it returns an error response.
 
-    For any other request, it returns the HTML form page
+    For any other request, it returns the HTML form page.
     """
     if request.startswith("GET /connect?"):
         print("POST REQUEST")
